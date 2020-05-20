@@ -21,6 +21,18 @@ class NegociacaoController {
         this._listaNegociacoes.apaga();
         this._mensagem.texto = "Lista de negociações apagadas com com sucesso";
     }
+    importaNegociacoes(event) {
+        event.preventDefault();
+        let service = new NegociacaoService();
+        service.obterNegociacoesDaSemana((err, negociacoes) => {
+            if(err) {
+                this._mensagem.texto = err;
+                return;
+            }
+            negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações importadas com sucesso';
+        });
+    }
     _criaNegociacao() {
         return new Negociacao(
             DateHelper.textoParaData(this._inputData.value),
