@@ -24,6 +24,20 @@ class NegociacaoController {
     importaNegociacoes(event) {
         event.preventDefault();
         let service = new NegociacaoService();
+         //evitando a piramide da descraça - pyramid doom - utilizando Promise   
+        Promise.all([
+            service.obterNegociacoesDaSemana(),
+            service.obterNegociacoesDaSemanaAnterior(),
+            service.obterNegociacoesDaSemanaRetrasada()]
+        ).then(negociacoes => {
+            negociacoes
+              .reduce((arrayAchatado, array) => arrayAchatado.concat(array), [])
+              .forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
+            this._mensagem.texto = 'Negociações importadas com sucesso';
+        })
+        .catch(erro => this._mensagem.texto = erro);
+
+        /* obterNoegociações com Call back 
         service.obterNegociacoesDaSemana((err, negociacoes) => {
             if(err) {
                 this._mensagem.texto = err;
@@ -32,6 +46,7 @@ class NegociacaoController {
             negociacoes.forEach(negociacao => this._listaNegociacoes.adiciona(negociacao));
             this._mensagem.texto = 'Negociações importadas com sucesso';
         });
+        */
     }
     _criaNegociacao() {
         return new Negociacao(
