@@ -6,15 +6,24 @@ class NegociacaoController {
         this._inputValor = $("#valor");
         this._listaNegociacoes = new Bind(
             new ListaNegociacoes(), new NegociacoesView($('#negociacoesView')),
-            'adiciona', 'apaga');
+            'adiciona', 'apaga', 'ordena','inverteOrdem');
         this._mensagem = new Bind(new Mensagem(),
             new MensagemView($("#mensagemView")), 'texto');
+        this._ordemAtual = '';
     }
     adiciona(event) {
         event.preventDefault();
         this._listaNegociacoes.adiciona(this._criaNegociacao());
         this._limparCampos();
         this._mensagem.texto = "Negociação Incluída com sucesso";
+    }
+   ordena(coluna) {
+        if(this._ordemAtual == coluna) {
+            this._listaNegociacoes.inverteOrdem();
+        } else {
+            this._listaNegociacoes.ordena((a, b) => a[coluna] - b[coluna]);
+        }
+        this._ordemAtual = coluna;   
     }
     apaga(event) {
         event.preventDefault();

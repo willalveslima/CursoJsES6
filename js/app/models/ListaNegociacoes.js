@@ -11,6 +11,12 @@ class ListaNegociacoes {
     get valorTotal() {
         return this._negociacoes.reduce((total, n) => total + n.volume, 0.0)
     }
+    ordena(criterio) {
+        this._negociacoes.sort(criterio);      
+    }
+    inverteOrdem() {
+        this._negociacoes.reverse();
+    }
     apaga() {
         this._negociacoes = [];
     }
